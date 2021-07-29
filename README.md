@@ -1,1 +1,1 @@
-# introduction-to-deeplearning
+# Implementation of some basic Machine Learning tasks
