@@ -1,0 +1,33 @@
+Notebook
+RNN_Sequence_Prediction_A_New_Beginning-TRANSPOSE
+
+# preprocessing
+music_directories = ('beeth', )
+sequence_length = 140
+target_key = 'C'#target key tonic - STRING
+
+# training
+training_epochs = 600
+training_batch_size = 1024
+
+# inference
+generated_notes_length = 600
+file_name = 'test_gen_beeth_trans.mid'
+
+################## Model ##################
+model = Sequential()
+model.add(CuDNNLSTM(
+    1024,
+    return_sequences=True, 
+    input_shape=(X.shape[1], X.shape[2])))
+model.add(Dropout(rate=0.3))
+model.add(CuDNNLSTM(1024, return_sequences=True))
+model.add(Dropout(rate=0.3))
+model.add(CuDNNLSTM(512))
+model.add(Dropout(rate=0.3))
+model.add(Dense(units=y.shape[1] * y.shape[2], activation='softmax'))
+model.add(Reshape((y.shape[1] ,y.shape[2])))
+#model.load_weights('results_RNN/v1/newchpts_beeth_950e')
+model.compile(loss='categorical_crossentropy', optimizer='adam')
+
+model.summary()

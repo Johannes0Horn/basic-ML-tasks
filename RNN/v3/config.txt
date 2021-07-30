@@ -1,0 +1,28 @@
+# preprocessing
+music_directories = ('chopin', )
+sequence_length = 100
+
+# training
+training_epochs = 300
+training_batch_size = 1024
+
+# inference
+generated_notes_length = 300
+file_name = 'test_gen_chopin_overnight.mid'
+
+# model
+model = Sequential()
+model.add(CuDNNLSTM(
+    1024,
+    return_sequences=True, 
+    input_shape=(X.shape[1], X.shape[2])))
+model.add(Dropout(rate=0.3))
+model.add(CuDNNLSTM(512, return_sequences=True))
+model.add(Dropout(rate=0.3))
+model.add(CuDNNLSTM(512))
+model.add(Dropout(rate=0.3))
+model.add(Dense(units=y.shape[1] * y.shape[2], activation='softmax'))
+model.add(Reshape((y.shape[1] ,y.shape[2])))
+model.compile(loss='categorical_crossentropy', optimizer='adam')
+
+model.summary()
